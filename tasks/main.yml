@@ -8,5 +8,9 @@
   when: 
     - ansible_os_family == 'RedHat'
     - ansible_distribution != 'Fedora'
-    - ansible_install_method == 'package'
 
+- name: Set up Ansible on Ubuntu.
+  include_tasks: upgrade-Ubuntu.yml
+  when:
+    - ansible_distribution == 'Ubuntu'
+    - ansible_install_method == 'package'

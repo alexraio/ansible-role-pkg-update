@@ -2,4 +2,4 @@
 - hosts: localhost
   remote_user: root
   roles:
-    - ansible-role-pkg-update_bis
+    - ansible-role-pkg-update
