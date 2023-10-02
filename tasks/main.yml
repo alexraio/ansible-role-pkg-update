@@ -1,2 +1,12 @@
 ---
-# tasks file for ansible-role-pkg-update_bis
+# tasks file for ansible-role-pkg-update
+
+# Setup/upgrade tasks.
+
+- name: Upgrade package on RedHat.
+  include_tasks: upgrade-RedHat.yml
+  when: 
+    - ansible_os_family == 'RedHat'
+    - ansible_distribution != 'Fedora'
+    - ansible_install_method == 'package'
+
