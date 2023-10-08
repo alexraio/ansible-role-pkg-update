@@ -1,0 +1,26 @@
+---
+
+- name: Update RHEL server using YUM
+  yum:
+    name: "*"
+    state: latest
+
+- name: install yum-utils
+  package:
+    name: yum-utils
+
+- name: check if reboot is required
+  shell: needs-restarting -r
+  failed_when: false
+  register: reboot_required
+  changed_when: false
+
+- name: Reboot the box if kernel updated
+  reboot:
+    msg: "Reboot initiated by Ansible for kernel updates"
+    connect_timeout: "{{ reboot_connect_timeout }}"
+    reboot_timeout: "{{ reboot_timeout }}"
+    pre_reboot_delay: 0
+    post_reboot_delay: "{{ reboot_post_reboot_delay }}"
+    test_command: uptime
+  when: reboot_required.rc != 0

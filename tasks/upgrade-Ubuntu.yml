@@ -1,0 +1,28 @@
+---
+
+- name: Update Debian repositories cache
+  apt:
+    update_cache: yes
+    force_apt_get: yes
+    cache_valid_time: "{{ cache_valid_time }}"
+
+- name: Upgrade all Debian packages on server
+  apt: 
+    upgrade: dist
+    force_apt_get: yes
+
+- name: Check if a reboot is needed on server
+  stat:
+    path: "/var/run/reboot-required"
+    get_md5: no
+  register: reboot_required_file
+
+- name: Reboot the box if kernel updated
+  reboot:
+    msg: "Reboot initiated by Ansible for kernel updates"
+    connect_timeout: "{{ reboot_connect_timeout }}"
+    reboot_timeout: "{{ reboot_timeout }}"
+    pre_reboot_delay: 0
+    post_reboot_delay: "{{ reboot_post_reboot_delay }}"
+    test_command: uptime
+  when: reboot_required_file.stat.exists
